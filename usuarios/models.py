@@ -11,5 +11,5 @@ class Clientes(models.Model):
     data_cadastro = models.DateTimeField(blank=True, null=True)
 
     class Meta:
-        managed = False
+        
         db_table = 'clientes'

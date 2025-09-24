@@ -16,7 +16,6 @@ class Emprestimos(models.Model):
     status = models.CharField(max_length=9, blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'emprestimos'
 
 
@@ -40,7 +39,7 @@ class Exemplares(models.Model):
     data_aquisicao = models.DateField(blank=True, null=True)
 
     class Meta:
-        managed = False
+        
         db_table = 'exemplares'
 
 
@@ -53,7 +52,7 @@ class Multas(models.Model):
     
 
     class Meta:
-        managed = False
+        
         db_table = 'multas'
 
 
@@ -79,7 +78,7 @@ class Recursos(models.Model):
         return self.descricao
 
     class Meta:
-        managed = False
+        
         db_table = 'recursos'
 
 
@@ -89,7 +88,7 @@ class Renovacoes(models.Model):
     nova_data_prevista_devolucao = models.DateField()
 
     class Meta:
-        managed = False
+        
         db_table = 'renovacoes'
 
 
@@ -101,7 +100,7 @@ class Reservas(models.Model):
     status = models.CharField(max_length=9, blank=True, null=True)
 
     class Meta:
-        managed = False
+        
         db_table = 'reservas'
 
 
@@ -114,7 +113,7 @@ class Subtipos(models.Model):
         return self.nome_subtipo
 
     class Meta:
-        managed = False
+        
         db_table = 'subtipos'
 
 
@@ -125,5 +124,5 @@ class Tipos(models.Model):
         return self.nome_tipo
     
     class Meta:
-        managed = False
+        
         db_table = 'tipos'
