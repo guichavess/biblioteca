@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block titulo %}Gerenciar Multas{% endblock %}
+{% block content %}
+
+<div class="container">
+  <br>
+  <h1>Gestão de Multas</h1>
+  <hr>
+    <form method="GET" action="" class="mb-4 form-inline">
+      <div class="form-group mr-3">
+        <input type="text" class="form-control" style="width: 300px;" name="q" placeholder="Pesquisar por nome do cliente..." value="{{ request.GET.q | default_if_none:'' }}">
+      </div>
+      <div class="form-group mr-3">
+        <select name="tipo_multa" class="form-control">
+          <option value="">Todos os Tipos</option>
+          {% for tipo in lista_tipos_multa %}
+            <option value="{{ tipo }}" {% if request.GET.tipo_multa == tipo %}selected{% endif %}>{{ tipo|capfirst }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group mr-3">
+        <select name="paga" class="form-control">
+          <option value="">Pagamento (Todos)</option>
+          {% for status in status_pagamento %}
+            <option value="{{ status.value }}" {% if request.GET.paga == status.value %}selected{% endif %}>{{ status.display }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit" class="btn btn-outline-secondary">Filtrar / Pesquisar</button>
+    </form>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Cliente (do Empréstimo)</th>
+          <th scope="col">Tipo</th>
+          <th scope="col">Valor</th>
+          <th scope="col">Paga</th>
+          <th scope="col">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for multa in multas %}
+        <tr>
+          <th>{{ multa.id }}</th>
+          <td>{{ multa.emprestimo.cliente.nome }}</td>
+          <td>{{ multa.tipo_multa }}</td>
+          <td>R$ {{ multa.valor_multa|floatformat:2 }}</td>
+          <td>{% if multa.paga %}Sim{% else %}Não{% endif %}</td>
+          <td class="action-buttons text-nowrap">
+            <a href="{% url 'recursos:editar_multa' multa.pk %}?page={{ page_obj.number }}" class="btn btn-warning btn-sm">Editar</a>
+            <a href="{% url 'recursos:excluir_multa' multa.pk %}" class="btn btn-danger btn-sm">Excluir</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6">Nenhuma multa encontrada.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% include 'paginacao.html' %}
+{% endblock %}

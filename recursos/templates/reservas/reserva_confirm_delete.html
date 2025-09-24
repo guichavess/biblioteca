@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Cancelar Reserva{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <br>
+    <h1>Cancelar Reserva</h1>
+    <hr>
+    <p>Você tem certeza que deseja cancelar a reserva #<strong>{{ object.id }}</strong>?</p>
+    <p>
+      <ul>
+        <li>Cliente: <strong>{{ object.cliente.nome }}</strong></li>
+        <li>Recurso: <strong>{{ object.recurso.descricao }}</strong></li>
+      </ul>
+    </p>
+    
+    <p>Esta ação irá liberar o exemplar de volta ao estoque. Esta ação não pode ser desfeita.</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Confirmar Cancelamento</button>
+        <a href="{% url 'recursos:lista_reservas' %}" class="btn btn-secondary">Voltar</a>
+    </form>
+</div>
+{% endblock %}

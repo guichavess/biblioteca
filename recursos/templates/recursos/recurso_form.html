@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+  {% if object %}Editar Recurso{% else %}Cadastrar Recurso{% endif %}
+{% endblock %}
+
+{% block content %}
+  {% if object %}
+    <h1>Editar Recurso: {{ object.descricao }}</h1>
+  {% else %}
+    <h1>Cadastrar Novo Recurso</h1>
+  {% endif %}
+  <hr>
+
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    {{ form.as_p }}
+    
+    <br>
+    <input class="btn btn-info btn-lg" type="submit" value="Salvar" />
+    <a href="{% url 'recursos:lista_recursos_crud' %}" class="btn btn-secondary">Cancelar</a>
+  </form>
+{% endblock %}

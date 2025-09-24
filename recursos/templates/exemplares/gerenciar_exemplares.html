@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Gerenciar Estoque (Exemplares){% endblock %}
+
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center">
+    <h1>Gestão de Estoque (Exemplares)</h1>
+    <a href="{% url 'recursos:cadastro_exemplar' %}" class="btn btn-primary">Adicionar Novo Exemplar</a>
+  </div>
+  <hr>
+    <form method="GET" action="" class="mb-4 form-inline">
+    <div class="form-group mr-3">
+      <label for="status" class="mr-2">Status:</label>
+      <select name="status" id="status" class="form-control">
+        <option value="">Todos</option>
+        {% for value, display in lista_de_status %}
+          <option value="{{ value }}" {% if request.GET.status == value %}selected{% endif %}>{{ display }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group mr-3">
+      <label for="recurso" class="mr-2">Recurso:</label>
+      <select name="recurso" id="recurso" class="form-control">
+        <option value="">Todos</option>
+        {% for recurso in lista_de_recursos %}
+          <option value="{{ recurso.id }}" {% if request.GET.recurso == recurso.id|stringformat:"s" %}selected{% endif %}>{{ recurso.descricao }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-outline-secondary">Filtrar</button>
+  </form>
+
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Código Livro</th>
+          <th scope="col">Recurso (Título)</th>
+          <th scope="col">Status</th>
+          <th scope="col">Data da Aquisição</th>
+          <th scope="col">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for exemplar in exemplares %}
+        <tr>
+          <th>{{ exemplar.id }}</th>
+          <td>{{ exemplar.recurso.descricao }}</td>
+          <td>
+            {% if exemplar.status == 'disponivel' %}
+              <span class="badge badge-success">{{ exemplar.get_status_display }}</span>
+            {% elif exemplar.status == 'emprestado' or exemplar.status == 'reservado' %}
+              <span class="badge badge-warning">{{ exemplar.get_status_display }}</span>
+            {% else %}
+              <span class="badge badge-danger">{{ exemplar.get_status_display }}</span>
+            {% endif %}
+          </td>
+          <td>{{ exemplar.data_aquisicao|date:"d/m/Y" }}</td>
+          
+          <td class="action-buttons text-nowrap">
+            <a href="{% url 'recursos:editar_exemplar' exemplar.pk %}?page={{ page_obj.number }}" class="btn btn-warning btn-sm">Editar</a>
+            <a href="{% url 'recursos:excluir_exemplar' exemplar.pk %}" class="btn btn-danger btn-sm">Excluir</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5">Nenhum exemplar cadastrado.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% include 'paginacao.html' %}
+{% endblock %}

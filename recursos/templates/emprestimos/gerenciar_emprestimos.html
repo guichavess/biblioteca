@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block titulo %}Gerenciar Devoluções{% endblock %}
+{% block content %}
+
+<br>
+  <h1>Gestão de Devoluções</h1>
+  <hr>
+
+  <form method="GET" action="" class="mb-4 form-inline">
+    <div class="form-group mr-3">
+      <input type="text" class="form-control" style="width: 300px;" name="q" placeholder="Pesquisar por nome do cliente..." value="{{ request.GET.q | default_if_none:'' }}">
+    </div>
+    <div class="form-group mr-3">
+      <select name="status" class="form-control">
+        <option value="">Todos os Status</option>
+        {% for status in lista_de_status %}
+          <option value="{{ status }}" {% if request.GET.status == status %}selected{% endif %}>{{ status|capfirst }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button type="submit" class="btn btn-outline-secondary">Filtrar / Pesquisar</button>
+  </form>
+
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Cliente</th>
+          <th scope="col">Exemplar (Recurso)</th>
+          <th scope="col">Data de Retirada</th>
+          <th scope="col">Devolver Até</th>
+          <th scope="col">Status</th>
+          <th scope="col">Ações</th>
+        </tr>
+      </thead>
+        <tbody>
+          {% for emprestimo in emprestimos %}
+          <tr>
+            <th scope="row">{{ emprestimo.id }}</th>
+            <td>{{ emprestimo.cliente.nome }}</td>
+            <td>{{ emprestimo.exemplar.recurso.descricao }} (ID: {{ emprestimo.exemplar.id }})</td>
+            <td>{{ emprestimo.data_emprestimo|date:"d/m/Y H:i" }}</td>
+            <td>{{ emprestimo.data_prevista_devolucao|date:"d/m/Y" }}</td>
+            <td><span class="badge badge-info">{{ emprestimo.status }}</span></td>
+
+            <td class="text-nowrap action-buttons">
+              {% if emprestimo.status == 'ativo' %}
+                
+                <form action="{% url 'recursos:registrar_devolucao' emprestimo.pk %}" method="POST" class="d-inline">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-success btn-sm">Registrar Devolução</button>
+                </form>
+
+                {% if emprestimo.exemplar.status != 'danificado' %}
+                <form action="{% url 'recursos:registrar_dano' emprestimo.pk %}" method="POST" class="d-inline">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja registrar DANO para este item? Esta ação gerará uma multa e removerá o exemplar do estoque.');">
+                    Registrar Dano
+                  </button>
+                </form>
+                {% endif %}
+                
+                {% if emprestimo.exemplar.recurso.permite_renovacao %}
+                  <a href="{% url 'recursos:renovar_emprestimo' emprestimo.pk %}" class="btn btn-primary btn-sm">
+                    Renovar
+                  </a>
+                {% endif %}
+                {% elif emprestimo.status == 'devolvido' %}
+                -
+              {% else %}
+                <span class="badge badge-secondary">{{ emprestimo.status }}</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="7">Nenhum empréstimo ativo.</td></tr>
+          {% endfor %}
+        </tbody>
+    </table>
+  </div>
+{% include 'paginacao.html' %}
+{% endblock %}

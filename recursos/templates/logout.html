@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Confirmar Empréstimo{% endblock %}
+
+{% block content %}
+<div class="container">
+  <br>
+  <div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+      
+      <h1>Confirmar Empréstimo</h1>
+      <hr>
+      
+      <h4>Reserva #{{ reserva.id }}</h4>
+      <ul>
+        <li>Cliente: <strong>{{ reserva.cliente.nome }}</strong></li>
+        <li>Recurso: <strong>{{ reserva.recurso.descricao }}</strong></li>
+        <li>Tipo: <strong>{{ reserva.recurso.tipo.nome_tipo }}</strong></li>
+      </ul>
+      <hr>
+      
+      <form method="POST">
+        {% csrf_token %}
+        
+        {% if is_media %}
+          <p class="lead">Recursos de mídia têm prazo máximo de 1 dia.</p>
+          <h4>Data Prevista para Devolução: {{ data_devolucao_prevista|date:"d/m/Y" }}</h4>
+        
+        {% else %}
+          <p class="lead">Recursos impressos: o cliente deve informar a data de devolução.</p>
+          <div class="form-group">
+            <label for="data_devolucao"><strong>Cliente informa devolução em:</strong></label>
+            <input type="date" name="data_devolucao" class="form-control" required>
+          </div>
+        
+        {% endif %}
+        
+        <br>
+        <div class="action-buttons">
+          <button type="submit" class="btn btn-success btn-lg">Confirmar Empréstimo</button>
+          <a href="{% url 'recursos:lista_reservas' %}" class="btn btn-secondary btn-lg">Cancelar</a>
+        </div>
+      </form>
+    </div>
+    <div class="col-md-3"></div>
+  </div>
+</div>
+{% endblock %}

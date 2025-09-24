@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Confirmar Exclusão de Exemplar{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <br>
+    <h1>Confirmar Exclusão</h1>
+    <hr>
+    <p>Você tem certeza que deseja excluir o exemplar #<strong>{{ object.id }}</strong> (Recurso: {{ object.recurso.descricao }})?</p>
+    
+    <p class="text-danger"><strong>Atenção:</strong> Exclua apenas se o exemplar foi perdido ou se é um cadastro duplicado. Se o exemplar estiver danificado, mude o status para 'Danificado' na tela de edição ou registre um dano no empréstimo.</p>
+    
+    <p>Esta ação não pode ser desfeita.</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
+        <a href="{% url 'recursos:lista_exemplares' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

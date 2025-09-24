@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Gerenciar Recursos{% endblock %}
+
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center">
+    <h1>Gestão de Recursos (Catálogo)</h1>
+    <a href="{% url 'recursos:cadastro_recurso' %}" class="btn btn-primary">Adicionar Novo Recurso</a>
+  </div>
+  <hr>
+  
+  <form method="GET" action="" class="mb-4 form-inline">
+    <div class="form-group mr-3">
+      <input type="text" class="form-control" name="q" placeholder="Pesquisar por descrição..." value="{{ request.GET.q | default_if_none:'' }}">
+    </div>
+    <div class="form-group mr-3">
+      <select name="subtipo" class="form-control">
+        <option value="">Todos os Subtipos</option>
+        {% for subtipo in lista_de_subtipos %}
+          <option value="{{ subtipo.id }}" {% if request.GET.subtipo == subtipo.id|stringformat:"s" %}selected{% endif %}>{{ subtipo.nome_subtipo }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button type="submit" class="btn btn-outline-secondary">Filtrar / Pesquisar</button>
+  </form>
+
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Descrição</th>
+          <th scope="col">Subtipo</th>
+          <th scope="col">Diária (R$)</th>
+          <th scope="col">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for recurso in recursos %}
+        <tr>
+          <th>{{ recurso.id }}</th>
+          <td>{{ recurso.descricao }}</td>
+          <td>{{ recurso.subtipo.nome_subtipo }}</td>
+          <td>R$ {{ recurso.valor_emprestimo_diaria|floatformat:2 }}</td>
+          <td class="action-buttons text-nowrap">
+            <a href="{% url 'recursos:editar_recurso' recurso.pk %}?page={{ page_obj.number }}" class="btn btn-warning btn-sm">Editar</a>
+            <a href="{% url 'recursos:excluir_recurso' recurso.pk %}" class="btn btn-danger btn-sm">Excluir</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5">Nenhum recurso cadastrado.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% include 'paginacao.html' %} {% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block titulo %}Excluir Multa{% endblock %}
+{% block content %}
+
+<div class="container">
+    <br>
+    <h1>Confirmar Exclusão</h1>
+    <hr>
+    <p>Você tem certeza que deseja excluir a multa #<strong>{{ object.id }}</strong> (Valor: R$ {{ object.valor_multa }})?</p>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
+        <a href="{% url 'recursos:lista_multas' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

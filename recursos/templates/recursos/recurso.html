@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+{{ subtipo.nome_subtipo }}
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1>Seção de {{ subtipo.nome_subtipo }}s</h1>
+  <a href="{% url 'recursos:inicio' %}" class="btn btn-secondary">
+    &larr; Voltar para Categorias
+  </a>
+</div>
+
+<div class="card-deck-wrapper">
+  {% for recurso in recursos %}
+  <div class="card" style="width: 18rem;">
+
+    {% if recurso.imagem_capa %}
+      <img src="{{ recurso.imagem_capa.url }}" class="card-img-top" alt="{{ recurso.descricao }}">
+    {% else %}
+      <img src="https://via.placeholder.com/280x180.png?text={{ recurso.descricao }}" class="card-img-top" alt="Placeholder">
+    {% endif %}
+
+    <div class="card-body">
+      <h5 class="card-title">{{ recurso.descricao }}</h5>
+    </div>
+
+    {% with disponiveis=recurso.get_qtd_disponivel %}
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+          <strong>Disponíveis: {{ disponiveis }}</strong>
+      </li>
+      <li class="list-group-item">Valor da Diária: R${{ recurso.valor_emprestimo_diaria|floatformat:2 }}</li>
+    </ul>
+
+    <div class="card-body">
+      {% if disponiveis > 0 %}
+        <form action="{% url 'recursos:criar_reserva' recurso.pk %}" method="POST">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-primary">Reservar Agora</button>
+        </form>
+      {% else %}
+        <a href="{% url 'recursos:reserva_futura' recurso.pk %}" class="btn btn-outline-info">Reservar para o Futuro</a>
+      {% endif %}
+    </div>
+    {% endwith %}
+
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

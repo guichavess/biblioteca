@@ -1,0 +1,60 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="{% url 'recursos:inicio' %}">Biblioteca</a>
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    
+    <ul class="navbar-nav">
+      {% if user.is_staff %}
+        <li class="nav-item {% if request.resolver_match.url_name == 'inicio' %}active{% endif %}">
+          <a class="nav-link" href="{% url 'recursos:inicio' %}">Home<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item {% if 'gerenciar/reservas' in request.path %}active{% endif %}">
+          <a class="nav-link" href="{% url 'recursos:lista_reservas' %}">Reservas</a>
+        </li>
+
+         <li class="nav-item {% if 'gerenciar/emprestimos' in request.path %}active{% endif %}">
+          <a class="nav-link" href="{% url 'recursos:lista_emprestimos' %}">Devoluções</a>
+        </li>
+        <li class="nav-item {% if 'gerenciar/multas' in request.path %}active{% endif %}">
+          <a class="nav-link" href="{% url 'recursos:lista_multas' %}">Multas</a>
+        </li>
+        <li class="nav-item {% if 'auth/' in request.path %}active{% endif %}"> <a class="nav-link" href="{% url 'usuarios:lista_clientes' %}">Clientes</a>
+        </li>
+
+        <li class="nav-item {% if 'gerenciar/recursos' in request.path %}active{% endif %}">
+          <a class="nav-link" href="{% url 'recursos:lista_recursos_crud' %}">Recursos </a>
+        </li>
+        <li class="nav-item {% if 'gerenciar/estoque' in request.path %}active{% endif %}">
+          <a class="nav-link" href="{% url 'recursos:lista_exemplares' %}">Estoque</a>
+        </li>
+      {% endif %}
+    </ul>
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+            <a class="nav-link btn btn-outline-success mr-2" href="{% url 'recursos:detalhes_reserva' %}">
+                 Criar Reserva
+                {% if contagem_reserva > 0 %}
+                    ({{ contagem_reserva }})
+                {% endif %}
+            </a>
+        </li>
+        {% if user.is_authenticated %}
+            <li class="nav-item">
+                <span class="navbar-text">Olá, {{ user.username }}</span>
+            </li>
+
+            <li class="nav-item">
+              <form method="post" action="{% url 'recursos:logout' %}" style="margin: 0;">
+                {% csrf_token %}
+                <button type="submit" class="nav-link btn btn-link" style="border:none; background:none; cursor:pointer;">
+                  Sair
+                </button>
+              </form>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'recursos:login' %}">Login (Funcionário)</a>
+            </li>
+        {% endif %}
+    </ul>
+  </div>
+</nav>

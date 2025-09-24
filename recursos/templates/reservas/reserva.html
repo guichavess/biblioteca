@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+Minhas Reservas
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <br>
+  <h1>Reserva</h1>
+  <hr>
+
+  {% if itens_reserva %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Descrição</th>
+          <th scope="col">Valor Diária</th>
+          <th scope="col">Ação</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in itens_reserva %}
+        <tr>
+          <td>{{ item.descricao }}</td>
+          <td>R$ {{ item.valor_diaria|floatformat:2 }}</td>
+          <td>
+            <a href="{% url 'recursos:remover_reserva' item.id %}" class="btn btn-danger btn-sm">Remover</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <hr>
+    <div class="text-right">
+      <form action="{% url 'recursos:finalizar_reserva' %}" method="POST">
+        {% csrf_token %}
+        <div class="form-group row">
+          <label for="cliente_select" class="col-sm-3 col-form-label">
+            <strong>Reservar para o Cliente:</strong>
+          </label>
+          <div class="col-sm-7">
+            <select class="form-control" id="cliente_select" name="cliente_id">
+              <option value="">--- Selecione um cliente ---</option>
+              {% for cliente in clientes %}
+                <option value="{{ cliente.pk }}">{{ cliente.nome }} (CPF: {{ cliente.cpf }})</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-sm-2">
+            <button type="submit" class="btn btn-success btn-lg">Finalizar Reserva</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+  {% else %}
+    <p>Sua Reserva Não Possui Nenhum Item.</p>
+    <a href="{% url 'recursos:inicio' %}" class="btn btn-primary">Ver Recursos</a>
+  {% endif %}
+
+</div>
+{% endblock %}

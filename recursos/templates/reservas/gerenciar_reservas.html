@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block titulo %}Gerenciar Reservas{% endblock %}
+{% block content %}
+
+<div class="container">
+  <br>
+  <h1>Gestão de Reservas</h1>
+  <hr>
+
+  <form method="GET" action="" class="mb-4 form-inline">
+    <div class="form-group mr-3">
+      <input type="text" style="width: 300px;" class="form-control" name="q" placeholder="Pesquisar por nome do cliente..." value="{{ request.GET.q | default_if_none:'' }}">
+    </div>
+    <div class="form-group mr-3">
+      <select name="status" class="form-control">
+        <option value="">Todos os Status</option>
+        {% for status in lista_de_status %}
+          <option value="{{ status }}" {% if request.GET.status == status %}selected{% endif %}>{{ status|capfirst }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button type="submit" class="btn btn-outline-secondary">Filtrar / Pesquisar</button>
+  </form>
+
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Cliente</th>
+          <th scope="col">Recurso</th>
+          <th scope="col">Data</th>
+          <th scope="col">Status</th>
+          <th scope="col">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for reserva in reservas %}
+        <tr>
+          <th>{{ reserva.id }}</th>
+          <td>{{ reserva.cliente.nome }}</td>
+          <td>{{ reserva.recurso.descricao }}</td>
+          <td>{{ reserva.data_reserva|date:"d/m/Y H:i" }}</td>
+          <td><span class="badge badge-primary">{{ reserva.status }}</span></td>
+          <td class="action-buttons text-nowrap">
+            {% if reserva.status == 'ativa' %}
+            <a href="{% url 'recursos:confirmar_emprestimo' reserva.pk %}" class="btn btn-success btn-sm">
+            Confirmar Empréstimo
+            </a>
+            <a href="{% url 'recursos:cancelar_reserva' reserva.pk %}" class="btn btn-danger btn-sm">Cancelar
+            </a>
+          {% else %}
+          </td>
+        </tr>
+        {% endif %}
+        {% empty %}
+        <tr><td colspan="6">Nenhuma reserva encontrada.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% include 'paginacao.html' %}
+{% endblock %}

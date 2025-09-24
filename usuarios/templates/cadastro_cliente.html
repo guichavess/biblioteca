@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Cadastrar Cliente{% endblock %}
+
+{% block content %}
+  {% if object %}
+    <h1>Editar Cliente: {{ object.nome }}</h1>
+  {% else %}
+    <h1>Cadastrar Novo Cliente</h1>
+  {% endif %}
+  <hr>
+
+  <form method="POST">
+    {% csrf_token %}
+    
+    <div class="form-group">
+      <label for="{{ form.nome.id_for_label }}">Nome:</label>
+      {{ form.nome }}
+      {% if form.nome.errors %}<div class="invalid-feedback d-block">{{ form.nome.errors }}</div>{% endif %}
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.cpf.id_for_label }}">CPF:</label>
+      <input type="text" name="cpf" class="form-control" placeholder="000.000.000-00" required id="id_cpf" 
+             value="{{ form.cpf.value|default_if_none:'' }}">
+      {% if form.cpf.errors %}<div class="invalid-feedback d-block">{{ form.cpf.errors }}</div>{% endif %}
+    </div>
+    
+    <div class="form-group">
+      <label for="{{ form.email.id_for_label }}">E-mail:</label>
+      {{ form.email }}
+      {% if form.email.errors %}<div class="invalid-feedback d-block">{{ form.email.errors }}</div>{% endif %}
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.telefone.id_for_label }}">Telefone:</label>
+      {{ form.telefone }}
+      {% if form.telefone.errors %}<div class="invalid-feedback d-block">{{ form.telefone.errors }}</div>{% endif %}
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.endereco.id_for_label }}">Endereço:</label>
+      {{ form.endereco }}
+      {% if form.endereco.errors %}<div class="invalid-feedback d-block">{{ form.endereco.errors }}</div>{% endif %}
+    </div>
+    
+    <br>
+    <input class="btn btn-info btn-lg" type="submit" value="Salvar" />
+    <a href="{% url 'usuarios:lista_clientes' %}" class="btn btn-secondary">Cancelar</a>
+  </form>
+
+
+{% block scripts %}
+  <script>
+    $(document).ready(function(){
+      $('#id_cpf').mask('000.000.000-00');
+    });
+  </script>
+{% endblock scripts %}
+
+{% endblock %}

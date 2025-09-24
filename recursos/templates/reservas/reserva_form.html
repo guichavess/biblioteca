@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Editar Reserva{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <br>
+  <div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+      
+      <h1>Editar Reserva #{{ object.id }}</h1>
+      <p>Cliente: <strong>{{ object.cliente.nome }}</strong></p>
+      <p>Recurso: <strong>{{ object.recurso.descricao }}</strong></p>
+      <hr>
+
+      <form method="POST">
+        {% csrf_token %}
+        
+        {{ form.as_p }}
+        
+        <br>
+        <input class="btn btn-info btn-lg" type="submit" value="Salvar" />
+        <a href="{% url 'recursos:lista_reservas' %}" class="btn btn-secondary btn-lg">Voltar</a>
+      </form>
+    </div>
+    <div class="col-md-3"></div>
+  </div>
+</div>
+{% endblock %}

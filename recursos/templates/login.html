@@ -1,0 +1,34 @@
+{% extends 'base.html' %} 
+
+{% block titulo %} Login de Funcionário {% endblock %} 
+
+{% block navbar %}
+{% endblock navbar %}
+
+{% block page_wrapper %}
+  {% block content %}
+    <div class="form-container">
+      <h1>Login</h1>
+      <hr>
+      {% if form.errors %}
+        <div class="alert alert-danger">
+          Seu nome de usuário ou senha estão incorretos. Tente novamente.
+        </div>
+      {% endif %}
+      <form method="POST" action="{% url 'recursos:login' %}">
+        {% csrf_token %}
+        <div class="form-group">
+          <label>Usuário</label>
+          <input type="text" name="username" class="form-control" placeholder="Digite seu usuário">
+        </div>
+        <div class="form-group">
+          <label>Senha</label>
+          <input type="password" name="password" class="form-control" placeholder="Digite sua senha">
+        </div>
+        <br>
+        <input class="btn btn-info btn-lg" type="submit" value="Entrar" />
+        <input type="hidden" name="next" value="{{ next }}" />
+      </form>
+    </div>
+  {% endblock content %}
+{% endblock page_wrapper %}

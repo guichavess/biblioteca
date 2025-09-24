@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Renovar Empréstimo{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <br>
+  <div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+      
+      <h1>Renovar Empréstimo</h1>
+      <hr>
+      
+      <h4>Empréstimo #{{ emprestimo.id }}</h4>
+      <ul>
+        <li>Cliente: <strong>{{ emprestimo.cliente.nome }}</strong></li>
+        <li>Recurso: <strong>{{ emprestimo.exemplar.recurso.descricao }}</strong></li>
+        <li>Devolução Atual: <strong>{{ emprestimo.data_prevista_devolucao|date:"d/m/Y" }}</strong></li>
+      </ul>
+      <hr>
+      
+      <form method="POST">
+        {% csrf_token %}
+        
+        <p class="lead">Recursos impressos: o cliente deve informar a data de devolução.</p>
+        <div class="form-group">
+          <label for="data_devolucao"><strong>Cliente informa nova devolução em:</strong></label>
+          <input type="date" name="data_devolucao" class="form-control" required>
+        </div>
+        
+        <br>
+        <button type="submit" class="btn btn-success btn-lg">Confirmar Renovação</button>
+        <a href="{% url 'recursos:lista_emprestimos' %}" class="btn btn-secondary btn-lg">Cancelar</a>
+      </form>
+    </div>
+    <div class="col-md-3"></div>
+  </div>
+</div>
+{% endblock %}

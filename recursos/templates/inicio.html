@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+Inicio
+{% endblock %}
+
+{% block content %}
+
+<h1> Seja Bem vindo a Biblioteca</h1>
+<hr>
+<div class="card-deck-wrapper">
+
+  {% for subtipo in lista_subtipos %} 
+  <div class="card" style="width: 18rem;">
+    
+    {% if subtipo.imagem %}
+      <img src="{{ subtipo.imagem.url }}" class="card-img-top" alt="{{ subtipo.nome_subtipo }}">
+    {% else %}
+      <img src="https://via.placeholder.com/280x180.png?text={{ subtipo.nome_subtipo }}" class="card-img-top" alt="Placeholder">
+    {% endif %}
+    <div class="card-body">
+      <h4 class="card-title">{{subtipo.nome_subtipo}}</h4> <h6 class="card-text">Acesse aqui o Acervo de {{subtipo.nome_subtipo}}.</h6>
+    </div>
+    <div class="card-body">
+      <button type="button" class="btn btn-outline-primary">
+        
+        <a href="{% url 'recursos:lista_recursos' subtipo.pk %}" class="card-link">Acessar</a>
+
+      </button>
+      
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

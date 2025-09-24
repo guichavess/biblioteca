@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Reservar {{ recurso.descricao }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <br>
+    <h1>Reserva Futura</h1>
+    <hr>
+    <h4>Recurso: {{ recurso.descricao }}</h4>
+    <p class="text-danger">Este item não está disponível no momento.</p>
+    <p>A data mais próxima para reserva é: <strong>{{ proxima_data_sugerida|date:"d/m/Y" }}</strong>.</p>
+    <hr>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="cliente_select"><strong>Selecione o Cliente:</strong></label>
+            <select class="form-control" id="cliente_select" name="cliente_id" required>
+                <option value="">--- Selecione um cliente ---</option>
+                {% for cliente in clientes %}
+                <option value="{{ cliente.pk }}">{{ cliente.nome }} (CPF: {{ cliente.cpf }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="data_reserva"><strong>Escolha a data de início da reserva:</strong></label>
+            <input type="date" name="data_reserva" class="form-control" required min="{{ proxima_data_sugerida }}">
+        </div>
+
+        <br>
+        <button type="submit" class="btn btn-success btn-lg">Confirmar Reserva</button>
+        <a href="{{ request.META.HTTP_REFERER }}" class="btn btn-secondary btn-lg">Cancelar</a>
+    </form>
+</div>
+{% endblock %}
