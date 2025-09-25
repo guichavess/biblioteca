@@ -152,3 +152,6 @@ LOGIN_URL = "recursos:login"
 LOGOUT_REDIRECT_URL = "recursos:login"
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
