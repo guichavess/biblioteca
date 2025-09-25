@@ -42,8 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'recursos',
     'usuarios',
-    'cloudinary_storage',
-    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -129,11 +127,9 @@ USE_I18N = True
 
 USE_TZ = True
 
-# MEDIA_URL = 'media/'
-# MEDIA_ROOT = BASE_DIR/"media"
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR/"media"
 
-
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
